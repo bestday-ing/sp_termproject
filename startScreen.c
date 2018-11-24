@@ -7,7 +7,7 @@ typedef struct {
 	char roomName[100];
 	char ip[50];
 	int portNum;
-	int availNum; //clientê°€ ì ‘ì†ì‹œ í™•ì¸í•˜ëŠ” ì‚¬í•­:: í˜„ì¬ ì¸ì› ì ‘ì† ìˆ˜
+	int availNum; //client°¡ Á¢¼Ó½Ã È®ÀÎÇÏ´Â »çÇ×:: ÇöÀç ÀÎ¿ø Á¢¼Ó ¼ö
 	int maxNum; 
 }Host;
 
@@ -17,7 +17,7 @@ int row, col;
 int count = 0;
 
 void tty_mode(int);
-void main_screen(void );
+void main_screen();
 void enter_chat_menu_setting();
 void create_chat_menu_setting();
 
@@ -26,45 +26,55 @@ int main()
 	int c;
  
 	tty_mode(0);
-	initscr(); // ì´ˆê¸°í™”
+	initscr(); // ÃÊ±âÈ­
 
 //	crmode();
 //	noecho();
 
-	main_screen();	// ë©”ì¸ í™”ë©´
+	main_screen();	// ¸ŞÀÎ È­¸é
 
 /*
-	Q ì…ë ¥ ì‹œ ì¢…ë£Œ
-	1 ì…ë ¥ ì‹œ ì±„íŒ…ë°© ìƒì„±
-	2 ì…ë ¥ ì‹œ ì±„íŒ…ë°© ì ‘ì†
+	Q ÀÔ·Â ½Ã Á¾·á
+	1 ÀÔ·Â ½Ã Ã¤ÆÃ¹æ »ı¼º
+	2 ÀÔ·Â ½Ã Ã¤ÆÃ¹æ Á¢¼Ó
+	B ÀÔ·Â ½Ã ¸ŞÀÎ È­¸éÀ¸·Î µÇµ¹¾Æ°¡±â
 */
-//	while(1)
+	while(1)
+	{
 		c = getchar();
 		if(c == 'Q'){
 			clear();
-		//	break;
+			break;
 		}
-		if(c=='1'){ // ì±„íŒ…ë°© ìƒì„± 
+		if(c=='1'){ // Ã¤ÆÃ¹æ »ı¼º 
 			clear();
 			create_chat_menu_setting();
                         }
-		if(c=='2'){ // ì±„íŒ…ë°© ì ‘ì†
+		if(c=='2'){ // Ã¤ÆÃ¹æ Á¢¼Ó
 			clear();
 			enter_chat_menu_setting();
 		}
-
+		if(c=='B'){// ¸ŞÀÎ ¸Ş´º·Î µÇµ¹¾Æ°¡±â
+			clear();
+			main_screen();
+		}
+	}
+	
+	//original·Î º¹±¸ ! ÄÚµå ¼öÁ¤ ½Ã ÀÌ¸¦ À¯³äÇÏ°í ¾îµğ¼­µç Á¾·áÇØµµ original restore ¿°µÎ !! 
 	tty_mode(1);
 	return 0;
 }
 
-void main_screen() // ë©”ì¸ë©”ë‰´
+void main_screen() // ¸ŞÀÎ¸Ş´º
 {
 	clear();
 	
 	move(1, 2);
-	addstr("***WELCOME****");
+	addstr("*** * W E L C O M E * ***");
 	move(2, 2);
-	addstr("press key : '1' : Create Chat, '2' : Enter Chat");	
+	addstr("press key '1' : Create Chat, '2' : Enter Chat");	
+	move(3, 2);
+	addstr("Note) press key 'Q' : Quit this program");	
 
 	move(5, 2);
 	addstr("         1. Create Chat");
@@ -86,31 +96,35 @@ void main_screen() // ë©”ì¸ë©”ë‰´
 	move(18, 25);
 	addstr("");
 
-	move(20,2); // ë©”ì„¸ì§€ ì „ì†¡ë°›ì„ ê³µê°„
+	move(20,2); // ¸Ş¼¼Áö Àü¼Û¹ŞÀ» °ø°£
 	
 	refresh();
 }
 
-void enter_chat_menu_setting() // ì±„íŒ… ì…ì¥ ë©”ë‰´
+void enter_chat_menu_setting() // Ã¤ÆÃ ÀÔÀå ¸Ş´º
 {
 	clear();
-	//list ë³´ì—¬ì£¼ê³  ë°© ë²ˆí˜¸ ì…ë ¥í•  ìˆ˜ ìˆëŠ” ê³µê°„ì„ ë§Œë“¤ì–´ì•¼ í•¨.
+	//list º¸¿©ÁÖ°í ¹æ ¹øÈ£ ÀÔ·ÂÇÒ ¼ö ÀÖ´Â °ø°£À» ¸¸µé¾î¾ß ÇÔ.
 	move(1, 2);
         addstr("--- Create Chatting Room ---");
+	move(3, 2);
+	addstr("Note) press key 'Q' : Quit this program, 'B' : back to the main menu");	
 
-        move(20,2);// ë©”ì„¸ì§€ ì „ì†¡ë°›ì„ ê³µê°„
+        move(20,2);// ¸Ş¼¼Áö Àü¼Û¹ŞÀ» °ø°£
 
 	refresh();
 }
 
-void create_chat_menu_setting() // ì±„íŒ… ìƒì„± ë©”ë‰´
+void create_chat_menu_setting() // Ã¤ÆÃ »ı¼º ¸Ş´º
 {
 	clear();
-	//ì±„íŒ…ë°© ì´ë¦„, max ì¸ì›ìˆ˜ ì…ë ¥  ë°›ì•„ì˜¤ê¸°
-		move(1, 2);
-		addstr("--- Create Chatting Room ---");
+	//Ã¤ÆÃ¹æ ÀÌ¸§, max ÀÎ¿ø¼ö ÀÔ·Â  ¹Ş¾Æ¿À±â
+	move(1, 2);
+	addstr("--- Create Chatting Room ---");
+	move(3, 2);
+	addstr("Note) press key 'Q' : Quit this program, 'B' : back to the main menu");	
 
-		move(20,2);// ë©”ì„¸ì§€ ì „ì†¡ë°›ì„ ê³µê°„
+	move(20,2);// ¸Ş¼¼Áö Àü¼Û¹ŞÀ» °ø°£
 
 	refresh();
 }
