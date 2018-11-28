@@ -11,10 +11,10 @@ void chat_menu(int clickEvent);
 void tcp_ip_mode_screen();
 void udp_mode_screen();
 
-int main()	
+int main(int ac, int *av[])	
 {
 	int c;
- 
+ 	
 	tty_mode(0);
 	initscr();
 
@@ -39,12 +39,14 @@ int main()
 				chat_menu(1);
 				tty_mode(1);
 				// exec server program
+				execl(av[1], av[1], NULL);
 			}
 			else if(c=='2'){ 
 				clear();
 				chat_menu(2);
 				tty_mode(1);
 				//exec client program
+				execl(av[2], av[2], NULL);
 			}
 		}
 		else if(c=='2'){ // UDP mode
