@@ -2,50 +2,27 @@
 #include <curses.h>
 #include <termios.h>
 
-//host.c
-typedef struct {
-	char roomName[100];
-	char ip[50];
-	int portNum;
-	int availNum; //client°¡ Á¢¼Ó½Ã È®ÀÎÇÏ´Â »çÇ×:: ÇöÀç ÀÎ¿ø Á¢¼Ó ¼ö
-	int maxNum; 
-}Host;
-
-Host hostList[50];
-
 int row, col;
 int count = 0;
 
 void tty_mode(int);
 void main_screen();
-void enter_chat_menu_setting();
-void create_chat_menu_setting();
+void chat_menu(int clickEvent);
+void tcp_ip_mode_screen();
+void udp_mode_screen();
 
 int main()	
 {
 	int c;
  
 	tty_mode(0);
-	initscr(); // ÃÊ±âÈ­
+	initscr();
 
 //	crmode();
 //	noecho();
 
-	main_screen();	// ¸ÞÀÎ È­¸é
+	main_screen();	
 
-/*
-<<<<<<< HEAD
-	Q ÀÔ·Â ½Ã Á¾·á
-	1 ÀÔ·Â ½Ã Ã¤ÆÃ¹æ »ý¼º
-	2 ÀÔ·Â ½Ã Ã¤ÆÃ¹æ Á¢¼Ó
-	B ÀÔ·Â ½Ã ¸ÞÀÎ È­¸éÀ¸·Î µÇµ¹¾Æ°¡±â
-=======
-	Q ìž…ë ¥ ì‹œ ì¢…ë£Œ
-	1 ìž…ë ¥ ì‹œ ì±„íŒ…ë°© ìƒì„±
-	2 ìž…ë ¥ ì‹œ ì±„íŒ…ë°© ì ‘ì†
-	B ìž…ë ¥ ì‹œ ë©”ì¸ í™”ë©´ìœ¼ë¡œ ë˜ëŒì•„ê°€ê¸°
->>>>>>> 54c292493da7df1cb530bc301f1d60826448dd65
-*/
 	while(1)
 	{
 		c = getchar();
@@ -53,49 +30,70 @@ int main()
 			clear();
 			break;
 		}
-		if(c=='1'){ // Ã¤ÆÃ¹æ »ý¼º 
+		if(c=='1'){ // TCP/IP mode 
 			clear();
-			create_chat_menu_setting();
-                        }
-		if(c=='2'){ // Ã¤ÆÃ¹æ Á¢¼Ó
-			clear();
-			enter_chat_menu_setting();
+			tcp_ip_mode_screen();
+			c= getchar();
+			if(c=='1'){
+				clear();
+				chat_menu(1);
+				tty_mode(1);
+				// exec server program
+			}
+			else if(c=='2'){ 
+				clear();
+				chat_menu(2);
+				tty_mode(1);
+				//exec client program
+			}
 		}
-<<<<<<< HEAD
-		if(c=='B'){// ¸ÞÀÎ ¸Þ´º·Î µÇµ¹¾Æ°¡±â
-=======
-		if(c=='B'){// ë©”ì¸ ë©”ë‰´ë¡œ ë˜ëŒì•„ê°€ê¸°
->>>>>>> 54c292493da7df1cb530bc301f1d60826448dd65
+		else if(c=='2'){ // UDP mode
+			clear();
+			udp_mode_screen();
+		}
+		else if(c==27){ //esc key --> back to the main screen
 			clear();
 			main_screen();
 		}
 	}
-	
-<<<<<<< HEAD
-	//original·Î º¹±¸ ! ÄÚµå ¼öÁ¤ ½Ã ÀÌ¸¦ À¯³äÇÏ°í ¾îµð¼­µç Á¾·áÇØµµ original restore ¿°µÎ !! 
-=======
-	//originalë¡œ ë³µêµ¬ ! ì½”ë“œ ìˆ˜ì • ì‹œ ì´ë¥¼ ìœ ë…í•˜ê³  ì–´ë””ì„œë“  ì¢…ë£Œí•´ë„ original restore ì—¼ë‘ !! 
->>>>>>> 54c292493da7df1cb530bc301f1d60826448dd65
+
 	tty_mode(1);
 	return 0;
 }
 
-void main_screen() // ¸ÞÀÎ¸Þ´º
+void chat_menu(int clickEvent)
+{
+	clear();
+	if(clickEvent == 1){
+		move(1, 2);
+		addstr("Copyright.2018.Center Of Computer");
+		move(2, 2);	
+	}
+	if(clickEvent == 2){
+		move(1, 2);
+		addstr("Copyright.2018.Center Of Computer");
+		move(2, 2);
+	}
+	
+	refresh();
+}
+
+void main_screen() 
 {
 	clear();
 	
 	move(1, 2);
 	addstr("*** * W E L C O M E * ***");
 	move(2, 2);
-	addstr("press key '1' : Create Chat, '2' : Enter Chat");	
+	addstr("select your mode");	
 	move(3, 2);
 	addstr("Note) press key 'Q' : Quit this program");	
 
 	move(5, 2);
-	addstr("         1. Create Chat");
+	addstr("         1. TCP/IP mode");
 
 	move(7, 2);
-	addstr("         2. Enter Chat");
+	addstr("         2. UDP mode");
 
 	move(13, 25);
 	addstr("          PM: CENTER OF COMPUTER          ");
@@ -111,46 +109,53 @@ void main_screen() // ¸ÞÀÎ¸Þ´º
 	move(18, 25);
 	addstr("");
 
-	move(20,2); // ¸Þ¼¼Áö Àü¼Û¹ÞÀ» °ø°£
+	move(20,2);
 	
 	refresh();
 }
 
-void enter_chat_menu_setting() // Ã¤ÆÃ ÀÔÀå ¸Þ´º
+void tcp_ip_mode_screen()
 {
 	clear();
-	//list º¸¿©ÁÖ°í ¹æ ¹øÈ£ ÀÔ·ÂÇÒ ¼ö ÀÖ´Â °ø°£À» ¸¸µé¾î¾ß ÇÔ.
 	move(1, 2);
-        addstr("--- Create Chatting Room ---");
-	move(3, 2);
-	addstr("Note) press key 'Q' : Quit this program, 'B' : back to the main menu");	
+	addstr("Copyright.2018.Center Of Computer");	
+	//move(3, 2);
+	//addstr("Note) press key '' : Quit this program");	
 
-        move(20,2);// ¸Þ¼¼Áö Àü¼Û¹ÞÀ» °ø°£
+	move(5, 2);
+	addstr("         1. create chat room (server)");
 
+	move(7, 2);
+	addstr("         2. enter chat room (client)");
+
+	move(20,2);
+	
 	refresh();
 }
 
-void create_chat_menu_setting() // Ã¤ÆÃ »ý¼º ¸Þ´º
+void udp_mode_screen()
 {
 	clear();
-<<<<<<< HEAD
-	//Ã¤ÆÃ¹æ ÀÌ¸§, max ÀÎ¿ø¼ö ÀÔ·Â  ¹Þ¾Æ¿À±â
-=======
-	//ì±„íŒ…ë°© ì´ë¦„, max ì¸ì›ìˆ˜ ìž…ë ¥  ë°›ì•„ì˜¤ê¸°
->>>>>>> 54c292493da7df1cb530bc301f1d60826448dd65
 	move(1, 2);
-	addstr("--- Create Chatting Room ---");
-	move(3, 2);
-	addstr("Note) press key 'Q' : Quit this program, 'B' : back to the main menu");	
+	addstr("Copyright.2018.Center Of Computer");	
+	//move(3, 2);
+	//addstr("Note) press key '' : Quit this program");	
 
-<<<<<<< HEAD
-	move(20,2);// ¸Þ¼¼Áö Àü¼Û¹ÞÀ» °ø°£
-=======
-	move(20,2);// ë©”ì„¸ì§€ ì „ì†¡ë°›ì„ ê³µê°„
->>>>>>> 54c292493da7df1cb530bc301f1d60826448dd65
+	move(5, 2);
+	addstr("         1. open server");
 
+	move(7, 2);
+	addstr("         2. client go go");
+
+	move(20,2);
+	
 	refresh();
 }
+
+
+
+       
+
 void tty_mode(int how)
 {
 	static struct termios original_mode;
