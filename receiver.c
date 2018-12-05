@@ -9,7 +9,7 @@
 #define BUF_SIZE 30
 #define address "127.0.0.1"
 
-int main(int argc, char **argv)
+int main()
 {
 	int recv_sock;
 	int str_len;
@@ -17,10 +17,10 @@ int main(int argc, char **argv)
 	char buf[BUF_SIZE];
 	struct sockaddr_in adr;
 	struct ip_mreq join_adr;
-	if(argc !=3){
+	/*if(argc !=3){
 		printf("Please input GROUPIP and PORT");
 		exit(1);
-	}
+	}*/
 
 	recv_sock = socket(PF_INET, SOCK_DGRAM,0);
 	memset(&adr,0,sizeof(adr));

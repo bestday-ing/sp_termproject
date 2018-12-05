@@ -10,6 +10,8 @@ void main_screen();
 void chat_menu(int clickEvent);
 void tcp_ip_mode_screen();
 void udp_mode_screen();
+void multicast();
+void broadcast();
 
 int main(int ac, int *av[])	
 {
@@ -52,6 +54,65 @@ int main(int ac, int *av[])
 		else if(c=='2'){ // UDP mode
 			clear();
 			udp_mode_screen();
+			c=getchar();
+			if(c == '1')
+			{
+				clear();
+				multicast();
+
+				int d;
+				d=getchar();
+				if(d == '1')
+				{
+					clear();
+					move(1,2);
+					addstr("Multicast UDP Server turn on!!");
+					move(2,2);
+					refresh();
+					tty_mode(1);
+					execl("./sender","./sender",NULL);
+				}
+				else if(d == '2')
+				{
+					clear();
+					move(1,2);
+					addstr("Multicast UDP Client turn on!!");
+					move(2,2);
+					refresh();
+					tty_mode(1);
+					execl("./receiver","./receiver",NULL);
+				}
+			}
+			else if( c == '2')
+			{
+				clear();
+				broadcast();
+
+				int d;
+				d=getchar();
+				if( d == '1')
+				{
+					clear();
+					move(1,2);
+					addstr("Broadcast UDP Server turn on!!");
+					move(2,2);
+					refresh();
+					tty_mode(1);
+					execl("./sbroad","./sbroad",NULL);
+				}
+				else if (d == '2')
+				{
+					clear();
+					move(1,2);
+					addstr("Broadcast UDP Client turn on!!");
+					move(2,2);
+					refresh();
+					tty_mode(1);
+					execl("./rbroad","./rbroad",NULL);
+
+				}
+
+			}
 		}
 		else if(c==27){ //esc key --> back to the main screen
 			clear();
@@ -144,16 +205,56 @@ void udp_mode_screen()
 	//addstr("Note) press key '' : Quit this program");	
 
 	move(5, 2);
-	addstr("         1. open server");
+	addstr("         1. multicast");
 
 	move(7, 2);
-	addstr("         2. client go go");
+	addstr("         2. broadcast");
 
 	move(20,2);
 	
 	refresh();
 }
 
+void multicast()
+{
+	clear();
+	move(1, 2);
+	addstr("Copyright.2018.Center Of Computer");	
+	//move(3, 2);
+	//addstr("Note) press key '' : Quit this program");	
+
+	move(5, 2);
+	addstr("         1. Server");
+
+	move(7, 2);
+	addstr("         2. Client");
+
+	move(20,2);
+	
+	refresh();
+
+
+}
+
+void broadcast()
+{
+	clear();
+	move(1, 2);
+	addstr("Copyright.2018.Center Of Computer");	
+	//move(3, 2);
+	//addstr("Note) press key '' : Quit this program");	
+
+	move(5, 2);
+	addstr("         1. Server");
+
+	move(7, 2);
+	addstr("         2. Client");
+
+	move(20,2);
+	
+	refresh();
+
+}
 
 
        

@@ -9,20 +9,21 @@
 
 int main(int argc,char **argv)
 {
+	int port=9190;
 	int recv_sock;
 	struct sockaddr_in adr;
 	int str_len;
 	char buf[BUF_SIZE];
-	if(argc!=2)
+	/*if(argc!=2)
 	{
 		printf("Please input Port\n");
 		exit(1);
-	}
+	}*/
 	recv_sock = socket(PF_INET, SOCK_DGRAM,0);
 	memset(&adr,0,sizeof(adr));
 	adr.sin_family=AF_INET;
 	adr.sin_addr.s_addr=htonl(INADDR_ANY);
-	adr.sin_port=htons(atoi(argv[1]));
+	adr.sin_port=htons(9190);
 
 	if(bind(recv_sock, (struct sockaddr*)&adr, sizeof(adr)) == -1)
 	{

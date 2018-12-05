@@ -9,25 +9,27 @@
 
 int main(int argc, char **argv)
 {
+	char address[100] = "255.255.255.255";
+	int port = 9190;
 	int send_sock;
 	struct sockaddr_in broad_adr;
 	FILE *fp;
 	char buf[BUF_SIZE];
 	int so_brd = 1;
-	if(argc !=3 )
+	/*if(argc !=3 )
 	{
 		printf("Please input broadcast IP and PORT\n");
 		exit(1);
-	}
+	}*/
 
 	send_sock = socket(PF_INET, SOCK_DGRAM, 0);
 	memset(&broad_adr,0,sizeof(broad_adr));
 	broad_adr.sin_family=AF_INET;
-	broad_adr.sin_addr.s_addr=inet_addr(argv[1]);
-	broad_adr.sin_port=htons(atoi(argv[2]));
+	broad_adr.sin_addr.s_addr=inet_addr(address);
+	broad_adr.sin_port=htons(port);
 
 	setsockopt(send_sock, SOL_SOCKET, SO_BROADCAST, (void*)&so_brd, sizeof(so_brd) );
-	if( (fp = fopen("data.txt","r")) == NULL )
+	if( (fp = fopen("data2.txt","r")) == NULL )
 	{
 		printf("fopen error()");
 		exit(1);

@@ -29,8 +29,7 @@ void chatting(int sockfd, int maxfdp1, fd_set rset, char *nickname)
 	while (1) {
 		FD_ZERO(&rset);
 		FD_SET(0, &rset);
-		FD_SET(sockfd, &rset);
-
+		FD_SET(sockfd, &rset);	
 		if (select(maxfdp1, &rset, (fd_set *)0, (fd_set *)0, (struct timeval *)0) <0) {
 			printf("\n\n>> select error\n");
 			sleep(2);
@@ -44,7 +43,7 @@ void chatting(int sockfd, int maxfdp1, fd_set rset, char *nickname)
 			}
 		}
 		
-		if (FD_ISSET(0, &rset)) { 
+		if (FD_ISSET(0, &rset)) {
 			memset(buf, 0, sizeof(buf)); 
 			if ((n = read(0, buf, sizeof(buf)))>0) { 
 				if (!strcmp(buf, quit)) {

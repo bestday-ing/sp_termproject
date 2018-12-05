@@ -198,6 +198,8 @@ int creating_room(int port,  int ppl)
 	char nick[MAXLINE];
   char *temp;
 
+	int quit_check = -1;
+
 	MAX_CLIENT = ppl;
 	usr_max_client = MAX_CLIENT;
 
@@ -325,7 +327,16 @@ int creating_room(int port,  int ppl)
 					}
 				}
 			}
-			if(list_c[0].socket_num == INVALID_SOCK){ // server가 종료 될때
+
+	quit_check = -1;
+	for (i = 0; i < MAX_CLIENT; i++)
+	{
+		if (list_c[i].socket_num != INVALID_SOCK)
+			quit_check = 1;
+	}
+
+	if (quit_check == -1) {
+		//	if(list_c[0].socket_num == INVALID_SOCK){ // server가 종료 될때
 				for (i = 0; i<MAX_CLIENT; i++) {// 
 					if (list_c[i].socket_num != INVALID_SOCK)
 							write(list_c[i].socket_num, SERVER_QUIT, sizeof(SERVER_QUIT));
